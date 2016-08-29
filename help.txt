@@ -1,0 +1,26 @@
+`/start`: Create scorebook for user.
+`!update`: Analyze and/or update a song's score record.
+Format:
+```
+!update
+MUSIC_TITLE_ENG(case insensitive)
+DIFFICULTY(easy,basic,advanced,expert,master,remaster)
+TAP
+HOLD
+SLIDE
+BREAK
+PERFECT
+GREAT
+GOOD
+BAD
+```
+`!query`: Query a song's score record.
+Format:
+```
+!query
+[title=MUSIC_TITLE_ENG]
+[genre=GENRE]
+[level=LEVEL]
+[ARhigherthan=AR]
+[sort=[title/genre/level/AR] [asc/desc]]
+```
