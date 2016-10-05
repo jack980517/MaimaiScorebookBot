@@ -1,5 +1,11 @@
 #coding:utf8
 
+##################################### TODO #####################################
+# Unify column names and input names
+# Unify columns from different tables
+# Add column for AR
+
+
 import telepot
 import sqlite3
 import os
@@ -52,7 +58,7 @@ while True:
 							for i in range(2,len(input)):
 								input[i]=int(input[i])
 							# Read song info and analyze
-							songmaxscores=conn.execute("select tap_%s,hold_%s,slide_%s,break_%s from '%s' where title_en='%s'"%(diff,diff,diff,diff,'musicinfo',input[0].lower())).fetchall()
+							songmaxscores=conn.execute("select tap_%s,hold_%s,slide_%s,break_%s from '%s' where music_title_eng='%s'"%(diff,diff,diff,diff,'musicinfo',input[0].lower())).fetchall()
 							if songmaxscores==[]:
 								raise Exception('No such song')
 							songmaxscores=songmaxscores[0]
@@ -70,16 +76,16 @@ while True:
 									else:
 										raise Exception('Score error')
 							# Compare and update score
-							currentscore=conn.execute("select %s from '%s' where title_en='%s'"%(diff,str(msg['from']['id']),input[0].lower())).fetchone()[0]
+							currentscore=conn.execute("select %s from '%s' where music_title_eng='%s'"%(diff,str(msg['from']['id']),input[0].lower())).fetchone()[0]
 							if score>currentscore:
 								msgtext+="New high score! Updating record."
-								conn.execute("update '%s' set %s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d where title_en='%s'"%(str(msg['from']['id']),diff,score,"tap_"+diff,input[2],"hold_"+diff,input[3],"slide_"+diff,input[4],"break_"+diff,input[5],"perfect_"+diff,input[6],"great_"+diff,input[7],"good_"+diff,input[8],"miss_"+diff,input[9],input[0]))
+								conn.execute("update '%s' set %s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d where music_title_eng='%s'"%(str(msg['from']['id']),diff,score,"tap_"+diff,input[2],"hold_"+diff,input[3],"slide_"+diff,input[4],"break_"+diff,input[5],"perfect_"+diff,input[6],"great_"+diff,input[7],"good_"+diff,input[8],"miss_"+diff,input[9],input[0]))
 							else:
 								msgtext+="Score not higher than current record. Not updating."
 							bot.sendMessage(msg['chat']['id'],msgtext)
 						if msg['text'].startswith('!query'): # Query existing record
 							input=msg['text'].split('\n')[1:]
-							result=conn.execute("select * from '%s' where title_en='%s'"%(str(msg['from']['id']),input[0])).fetchall()
+							result=conn.execute("select * from '%s' where music_title_eng='%s'"%(str(msg['from']['id']),input[0])).fetchall()
 							bot.sendMessage(msg['chat']['id'],pformat(result))
 				except KeyboardInterrupt:
 					raise
@@ -90,5 +96,3 @@ while True:
 		conn.commit()
 		conn.close()
 		exit()
-	except Exception:
-		continue
